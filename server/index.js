@@ -68,18 +68,40 @@ io.on('connection', socket => {
         })
     })
 
-    socket.on('message', data =>{
-        console.log(data)
-        io.emit('message',`${socket.id.substring(0,5)}: ${data}`)
-    })
+
 
     //User disconnect - others
     socket.on('disconnected', () => {
-        socket.broadcast.emit('message', `User ${socket.id.substring(0,5)} disconnected`)
+        const user = getUser(socket.id)
+        userLeavesApp(socket.id)
+
+        if (user) {
+            io.to(user.room).emit('message', buildMsg(ADMIN, ` ${user.name} Left the room`))
+
+            io.to(user.room).emit('userList',{
+                users: getUserInRoom(user.room)
+            })
+
+            io.emit('roomList', {
+                rooms: getAllActiveRooms()
+            })
+        }
+        console.log(`User ${socket.id} disconnected`)
+    })
+
+    socket.on('message', ({ name, text}) =>{
+        const room = getUser(socket.id)?.room
+        if (room) {
+            io.to(room).emit('message', buildMsg(name, text))
+        }
     })
 
     socket.on('activity', (name) => {
-        socket.broadcast.emit('activity', name)
+        const room = getUser(socket.id)?.room
+
+        if(room) {
+            socket.broadcast.to(room).emit('activity', name)
+        }
     })
 })
 
