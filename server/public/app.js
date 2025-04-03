@@ -46,8 +46,9 @@ msgInput.addEventListener('keypress', () => {
 //Listen for msg
 socket.on("message", (data) => {
     activity.textContent = "";
+    const { name, text, time } = data
     const li = document.createElement('li')
-    li.textContent = data
+    li.className = 'post'
     document.querySelector('ul').appendChild(li)
 })
 
