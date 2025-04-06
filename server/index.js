@@ -55,7 +55,7 @@ io.on('connection', socket => {
 
         socket.join(user.room)
 
-        socket.emit('message', buildMsg(ADMIN, `You have joined the ${user.room} to chat room`))
+        socket.emit('message', buildMsg(ADMIN, `You have joined the ${user.name} to ${user.room} chat room`))
 
         socket.broadcast.to(user.room).emit('message', buildMsg(ADMIN, `${user.name} has joined`))
 
