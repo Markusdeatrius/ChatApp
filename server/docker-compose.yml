@@ -1,0 +1,19 @@
+services:
+  app:
+    build: .
+    ports:     
+      - "3500:3500"
+
+  database:
+    image: mysql:5.7
+    ports:
+      - "5500:5500"
+    command: --init-file /data/application/init.sql
+    volumes:
+      - ./init.sql:/data/application/init.sql
+    environment:
+      MYSQL_ROOT_USER: root
+      MYSQL_ROOT_PASSWORD: Niggas
+      MYSQL_DATABASE: homestead
+      MYSQL_USER: Pleb
+      MYSQL_PASSWORD: secret
